@@ -40,4 +40,3 @@
 			((null? lis) 0)
 			((number? (car lis)) (+ (car lis) (sumnumbers (cdr lis))))
 			(else (sumnumbers (cdr lis))))))
-
