@@ -80,7 +80,6 @@
   )
 
 ; given a list, duplicate all contents, including any sublists
-;TODO: what about just the empty list?
 (define dup*
   (lambda (lis)
     (cond
@@ -93,8 +92,18 @@
 
 ; given a (possibly nested) list, remove any atom that is the repeat of the atom that immediately
 ; precedes it in the same sublist
-;(define removedups*
-;  )
+(define removedups*
+  (lambda (lis)
+    (cond
+      ((null? lis) '())
+      ((list? (car lis)) (cons (removedups* (car lis)) (removedups* (cdr lis))))
+      ; if the list has at least two elements and the first two match
+      ((and (not (null? (cdr lis))) (equal? (car lis) (car (cdr lis)))) (removedups* (cdr lis)))
+      ; otherwise, check the rest of the list
+      (else (cons (car lis) (removedups* (cdr lis))))
+      )
+    )
+  )
 
 ; given a (possibly nested) list, return a list containing two lists:
 ; the first list contains the odd-indexed elements (starting from 1)
@@ -106,5 +115,15 @@
 ; given a (possibly nested) list, remove any element that, once repeated elements have been removed
 ; from it, is the repeat of any element (also once elements have been removed from it) that
 ; immediately precedes it in the same sublist
-;(define removedups**
-;  )
+(define removedups**
+  (lambda (lis)
+    (cond
+      ((null? lis) '())
+      ((list? (car lis)) (cons (removedups* (car lis)) (removedups* (cdr lis)))) ;TODO: this is removedups*, change this line
+      ; if the list has at least two elements and the first two match
+      ((and (not (null? (cdr lis))) (equal? (car lis) (car (cdr lis)))) (removedups* (cdr lis)))
+      ; otherwise, check the rest of the list
+      (else (cons (car lis) (removedups* (cdr lis))))
+      )
+    )
+  )
