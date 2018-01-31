@@ -85,7 +85,7 @@
   (lambda (lis)
     (cond
       ((null? lis) '())
-      ((list? (car lis)) (cons (cons (dup* (car lis)) (cons (dup* (car lis)) '())) (dup* (cdr lis))))
+      ((list? (car lis)) (cons (dup* (car lis)) (cons (dup* (car lis)) (dup* (cdr lis)))))
       (else (cons (car lis) (cons (car lis) (dup* (cdr lis)))))
       )
     )
