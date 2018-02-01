@@ -140,7 +140,7 @@
   (lambda (lis)
     (cond
       ((null? lis) '())
-      ((list? (car lis)) (cons (removedups* (car lis)) (removedups* (cdr lis)))) ;TODO: this is removedups*, change this line
+      ((list? (car lis)) (cons (removedups* (car lis)) (removedups* (cdr lis))))
       ; if the list has at least two elements and the first two match
       ((and (not (null? (cdr lis))) (equal? (car lis) (car (cdr lis)))) (removedups* (cdr lis)))
       ; otherwise, check the rest of the list
