@@ -3,11 +3,10 @@
 ; Homework 1
 
 ; given a number and a list of numbers in order, insert the number in its proper place
-;TODO: what about a zero length list?  should it return empty or the number?
 (define insert
   (lambda (num lis)
     (cond
-      ((null? lis) '())
+      ((null? lis) (cons num '()))
       ((> num (car lis)) (cons (car lis) (insert num (cdr lis))))
       (else (cons num lis))
       )
@@ -41,16 +40,16 @@
 ; given a list of atoms, return a list that contains two lists of atoms:
 ; the first list contains odd-indexed atoms (starting from 1)
 ; the second list contains the even-indexed atoms (starting from 1)
-;TODO: not done, doesn't work right
 (define split
   (lambda (lat)
     (cond
-      ((null? lat) '())
-      ((null? (cdr lat)) (cons (car lat) '()))
-      ((null? (cdr (cdr lat))) (cons (split (cons (car lat) '())) (split (cons (cdr lat) '()))))
-      (else (cons (cdr (split (cdr lat))) (cons (car (split (cdr lat))) (car lat))))
-      ;((null? (car (car lat))) (cons '() '())) ;this isn't right, fix it
-      ;(else (cons (cons (car lat) (split (cdr lat))) (cons (car (cdr lat)) (split (cdr (cdr lat))))))
+      ((null? lat) '(() ())) ;no elements
+      ((not (list? (car lat))) (split (cons lat '(())))) ;if it's a lat
+      ((null? (cdr (car lat))) lat) ;one element
+      (else (cons
+             (cons (car (car lat)) (car (split (cdr (cdr (car lat)))))) ;odds
+             (cons (cons (car (cdr (car lat))) (car (cdr (split (cdr (cdr (car lat))))))) '()) ;evens
+             ))
       )
     )
   )
@@ -109,8 +108,30 @@
 ; the first list contains the odd-indexed elements (starting from 1)
 ; the second list contains the even-indexed elements (starting from 1)
 ; However, if any of these elements are also lists, these elements should be split as well
-;(define split*
-;  )
+(define split*
+  (lambda (lis)
+    (cond
+      ((null? lis) '(() ()))
+      ((not (list? lis)) lis)
+      (else (split*_helper (cons lis '(()))))
+      )
+    )
+  )
+
+;a helper function, I had no choice
+;splits the list when it's in the form ((odds + unprocessed) (evens))
+(define split*_helper
+  (lambda (lis)
+    (cond
+      ((not (list? (car lis))) (split* (cons lis '(())))) ;if it's a lat
+      ((null? (cdr (car lis))) lis) ;one element
+      (else (cons
+             (cons (split* (car (car lis))) (car (split* (cdr (cdr (car lis)))))) ;odds
+             (cons (cons (split* (car (cdr (car lis)))) (car (cdr (split* (cdr (cdr (car lis))))))) '()) ;evens
+             ))
+      )
+    )
+  )
 
 ; given a (possibly nested) list, remove any element that, once repeated elements have been removed
 ; from it, is the repeat of any element (also once elements have been removed from it) that
