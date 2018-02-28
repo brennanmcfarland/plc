@@ -101,11 +101,54 @@
       (else (split-cps (cddr lis) (lambda (v1 v2) (return (cons (car lis) v1) (cons (cadr lis) v2))))))))
 
 
+;TODO: the below
 ; given a list and a lat, return the first list with each atom from left to right replaced by the corresponding atom of the second list until the second list runs out of atoms
 (define replaceatoms
   (lambda (lis lat)
     (replaceatoms-cps (lis lat (lambda (v) v)))))
 
-(define replaceatoms-cps
-  (lambda (lis lat return)
-    (
+(define replaceatoms-reg
+  (lambda (lis lat)
+    (cond
+      ((null? lis) '())
+      ((lis? (car lis)) (cons (replaceatoms-reg ()) ())) ; is there a helper function we can use?  how to get place in 2nd list?
+      ; we could write a deeplen maybe?
+      ; or is there something we can do specifically with the cps?
+      (else ()))))
+
+;(define replaceatoms-cps
+;  (lambda (lis lat return)
+;    (
+
+; given an atom and a list, return a list containing all elements occuring after the last occurence of the atom
+(define suffix
+  (lambda (x lis)
+    (call/cc
+     (lambda (break)
+       (suffix-helper x lis break)))))
+
+(define suffix-helper
+  (lambda (x lis break)
+    (cond
+      ((null? lis) '())
+      ((eq? (car lis) x) (break (suffix-helper x (cdr lis) break)))
+      (else (cons (car lis) (suffix-helper x (cdr lis) break))))))
+
+
+; given an atom and a list, empty any sublists containing the given atom
+(define emptysublists
+  (lambda (x lis)
+    (call/cc
+     (lambda (break)
+       (emptysublists-helper x lis break)))))
+
+; TODO: works most of the time but still fails the example
+; TODO: ^, sometimes only removes x and atoms after it in the same sublist instead of the whole sublist
+; TODO: check to make sure all the others pass the given examples
+(define emptysublists-helper
+  (lambda (x lis break)
+    (cond
+      ((null? lis) '())
+      ((list? (car lis)) (cons (emptysublists-helper x (car lis) break) (emptysublists-helper x (cdr lis) break)))
+      ((eq? (car lis) x) (break '()))
+      (else (cons (car lis) (emptysublists-helper x (cdr lis) break))))))
