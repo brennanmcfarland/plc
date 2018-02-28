@@ -1,4 +1,6 @@
-; TODO: is there some way to tell if the stack is blowing up?
+; Brennan McFarland
+; February 28, 2018
+; Programming Exercise 2
 
 ; given a number and ordered list of numbers insert the number in the proper place
 (define insert
@@ -100,25 +102,18 @@
       ((null? (cdr lis)) (return lis '()))
       (else (split-cps (cddr lis) (lambda (v1 v2) (return (cons (car lis) v1) (cons (cadr lis) v2))))))))
 
-
-;TODO: the below
 ; given a list and a lat, return the first list with each atom from left to right replaced by the corresponding atom of the second list until the second list runs out of atoms
 (define replaceatoms
   (lambda (lis lat)
-    (replaceatoms-cps (lis lat (lambda (v) v)))))
+    (replaceatoms-cps lis lat (lambda (v1 v2) v1))))
 
-(define replaceatoms-reg
-  (lambda (lis lat)
+(define replaceatoms-cps
+  (lambda (lis lat return)
     (cond
-      ((null? lis) '())
-      ((lis? (car lis)) (cons (replaceatoms-reg ()) ())) ; is there a helper function we can use?  how to get place in 2nd list?
-      ; we could write a deeplen maybe?
-      ; or is there something we can do specifically with the cps?
-      (else ()))))
-
-;(define replaceatoms-cps
-;  (lambda (lis lat return)
-;    (
+      ((null? lis) (return '() lat))
+      ((null? lat) (return lis lat))
+      ((list? (car lis)) (replaceatoms-cps (car lis) lat (lambda (v1 v2) (replaceatoms-cps (cdr lis) v2 (lambda (v3 v4) (return (cons v1 v3) v4))))))
+      (else (replaceatoms-cps (cdr lis) (cdr lat) (lambda (v1 v2) (return (cons (car lat) v1) v2)))))))
 
 ; given an atom and a list, return a list containing all elements occuring after the last occurence of the atom
 (define suffix
@@ -138,17 +133,14 @@
 ; given an atom and a list, empty any sublists containing the given atom
 (define emptysublists
   (lambda (x lis)
-    (call/cc
+    (call/cc ; we need a call/cc here because even the outer list needs a continuation
      (lambda (break)
        (emptysublists-helper x lis break)))))
 
-; TODO: works most of the time but still fails the example
-; TODO: ^, sometimes only removes x and atoms after it in the same sublist instead of the whole sublist
-; TODO: check to make sure all the others pass the given examples
 (define emptysublists-helper
   (lambda (x lis break)
     (cond
       ((null? lis) '())
-      ((list? (car lis)) (cons (emptysublists-helper x (car lis) break) (emptysublists-helper x (cdr lis) break)))
+      ((list? (car lis)) (cons (call/cc (lambda (break1) (emptysublists-helper x (car lis) break1))) (emptysublists-helper x (cdr lis) break)))
       ((eq? (car lis) x) (break '()))
       (else (cons (car lis) (emptysublists-helper x (cdr lis) break))))))
