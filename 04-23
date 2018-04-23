@@ -1,0 +1,46 @@
+% Prolog uses propositional functions
+% P(x)
+% P(x,y)
+% in prolog, facts end in .
+% uppercase is for variables
+
+% A database of facts
+male(harry).
+male(ron).
+male(george).
+male(fred).
+male(arthur).
+male(percy).
+male(bill).
+male(albus).
+male(albusjr).
+male(neville).
+male(jamesjr).
+male(teddy).
+male(james).
+male(vernon).
+male(dudley).
+
+
+female(hermione).
+female(ginny).
+female(lily).
+female(luna).
+female(fleur).
+female(molly).
+female(rose).
+female(rose).
+female(penunia).
+
+parentof(harry,albusjr).
+parentof(ginny,albusjr).
+parentof(harry,jamesjr).
+parentof(ginny,gamesjr).
+parentof(james,harry).
+parentof(lily,harry).
+parentof(vernon,dudley).
+parentof(petunia,dudley).
+
+married(harry,ginny).
+married(lily,james).
+married(penunia,vernon).
