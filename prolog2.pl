@@ -25,7 +25,7 @@ insertbefore(A, X, [H|T], [H|S]) :- insertbefore(A, X, T, S).
 
 % insertbeforeall: places x before every a in the list
 insertbeforeall(_,_,[],[]).
-insertbeforeall(A, X, [A|T], [X,A|S]) :- insertbeforeall(A, X, T, S).
+insertbeforeall(A, X, [A|T], [X,A|S]) :- !, insertbeforeall(A, X, T, S).
 insertbeforeall(A, X, [H|T], [H|S]) :- insertbeforeall(A, X, T, S).
 % myreverse
 myreverse([],[]).
