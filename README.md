@@ -1,2 +1,2 @@
 # plc
-Example programs and homeworks from programming language concepts class
+Example programs and homeworks from programming language concepts class.  Looking back on this much later as I make this repository public, I'm sure everything's horribly broken and there's a lot that's wrong/unfinished, but whatever.  Hopefully gifting access to this to the rest of the world and showing that I at least did something a long time ago with this outweighs any potential tarnishing of my reputation as a programmer.
